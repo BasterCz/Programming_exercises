@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Threading;
 using System.IO;
 using Path = System.IO.Path;
+using Microsoft.Win32;
 
 namespace kaDel
 {
@@ -50,14 +51,15 @@ namespace kaDel
     {
         int[,] playfieldArray = new int[10, 10];
         IntPoint robotPosition = new IntPoint(9, 0);
-        Queue<string> actionsQueue = new Queue<string>();
+        List<string> actionsQueue = new List<string>();
         DirectionsEnum direction = DirectionsEnum.Right;
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-
+        bool isSaved = false;
+        int operations = 0;
+        
         public MainWindow()
         {
             InitializeComponent();
-
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
             dispatcherTimer.Tick += DispatcherTimer_Tick;
 
@@ -86,12 +88,28 @@ namespace kaDel
             Rerender();
         }
 
+        private void StopProgram(bool failed)
+        {
+            dispatcherTimer.Stop();
+            if (failed)
+            {
+                TBOutput.Text += "\nProgram selhal a byl ukoncen";
+            }
+            else
+            {
+                TBOutput.Text += "\nProgram byl dokoncen";
+            }
+        }
+
         private void DispatcherTimer_Tick(object? sender, EventArgs e)
         {
             if (actionsQueue.Count > 0)
             {
-                string action = actionsQueue.Dequeue();
+                operations--;
+                string action = actionsQueue[actionsQueue.Count - 1];
+                actionsQueue.RemoveAt(actionsQueue.Count - 1);
                 bool outOfRange = false;
+                bool problem = false;
                 switch (action)
                 {
                     case "krok":
@@ -131,26 +149,46 @@ namespace kaDel
                         direction = direction.Next();
                         break;
                     case "vypln":
-                        playfieldArray[robotPosition.x, robotPosition.y] = 1;
+                        if (playfieldArray[robotPosition.x, robotPosition.y] == 0)
+                        {
+                            playfieldArray[robotPosition.x, robotPosition.y] = 1;
+                        }
+                        else { 
+                            TBOutput.Text += "\n" + action + ": Nelze";
+                            problem = true;
+                            StopProgram(problem);
+                        }
                         break;
                     case "vymaz":
-                        playfieldArray[robotPosition.x, robotPosition.y] = 0;
+                        if (playfieldArray[robotPosition.x, robotPosition.y] == 1)
+                        {
+                            playfieldArray[robotPosition.x, robotPosition.y] = 0;
+                        }
+                        else
+                        {
+                            TBOutput.Text += "\n" + action + ": Nelze";
+                            problem = true;
+                            StopProgram(problem);
+                        }
                         break;
                     default:
-                        MessageBox.Show("Neplatny prikaz: " + action);
-                        dispatcherTimer.Stop();
+                        TBOutput.Text += "\n" + action + ": Neznam";
+                        problem = true;
+                        StopProgram(problem);
                         break;
                 }
                 if (outOfRange)
                 {
-                    MessageBox.Show("Robot je mimo hraci pole");
-                    dispatcherTimer.Stop();
+                    TBOutput.Text += "\n" + action + ": KaDel spadne pres okraj";
+                    problem = true;
+                    StopProgram(problem);
                 }
                 Rerender();
+                if (!problem) TBOutput.Text += "\n" + action + ": OK";
             }
             else
             {
-                dispatcherTimer.Stop();
+                StopProgram(false);
             }
         }
 
@@ -199,15 +237,6 @@ namespace kaDel
                     }
                 }
             }
-            //write to debug console the current playfield
-            for (int i = 0; i < 10; i++)
-            {
-                for (int j = 0; j < 10; j++)
-                {
-                    Debug.Write(playfieldArray[i, j] + " ");
-                }
-                Debug.WriteLine("");
-            }
             Rerender();
         }
 
@@ -239,26 +268,94 @@ namespace kaDel
 
         private void BtnSpustit_Click(object sender, RoutedEventArgs e)
         {
-            actionsQueue = new Queue<string>(TBInterpret.Text.Split('\n').Select(x => x.Trim().ToLower()).Where(x => x != "").ToArray());
+            actionsQueue = new List<string>(TBInterpret.Text.Split('\n').Select(x => x.Trim().ToLower()).Where(x => x != "").Where(x => !x.StartsWith("#")).ToArray());
+            int op = operations = actionsQueue.Count;
+            for (int i = 0; i < actionsQueue.Count && op != 0; i++)
+            {
+                if (actionsQueue.ElementAt(i).StartsWith("otoc") || actionsQueue.ElementAt(i).StartsWith("krok"))
+                {
+                    if (actionsQueue.ElementAt(i).Length > 4)
+                    {
+                        int num = 0;
+                        if (int.TryParse(actionsQueue.ElementAt(i).Substring(4), out num))
+                        {
+                            for (int j = 0; j < num; j++)
+                            {
+                                actionsQueue.Add(actionsQueue.ElementAt(i).Substring(0, 4));
+                            }
+                            actionsQueue.RemoveAt(i);
+                            i--;
+                            op--;
+                        }
+                    }
+                    else
+                    {
+                        actionsQueue.Add(actionsQueue.ElementAt(i));
+                        actionsQueue.RemoveAt(i);
+                        i--;
+                        op--;
+                    }
+                }
+                else
+                {
+                    actionsQueue.Add(actionsQueue.ElementAt(i));
+                    actionsQueue.RemoveAt(i);
+                    i--;
+                    op--;
+                }
+            }
+            actionsQueue.Reverse();
             playfieldArray = new int[10, 10];
             robotPosition = new IntPoint(9, 0);
             direction = DirectionsEnum.Right;
             Rerender();
             dispatcherTimer.Start();
-            Debug.WriteLine("Spuštění");
+            TBOutput.Text += "\nProgram spusten";
         }
 
         private void BtnNahrat_Click(object sender, RoutedEventArgs e)
         {
+            if (TBInterpret.Text != "" && !isSaved)
+            {
+                MessageBoxResult result = MessageBox.Show("Chcete ulozit zmeny?", "Ulozit", MessageBoxButton.YesNoCancel);
+                if (result == MessageBoxResult.Yes)
+                {
+                    BtnUlozit_Click(sender, e);
+                }
+                else if (result == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
 
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (openFileDialog.ShowDialog() == true)
+            {
+                TBInterpret.Text = File.ReadAllText(openFileDialog.FileName);
+                isSaved = true;
+            }
         }
 
         private void BtnUlozit_Click(object sender, RoutedEventArgs e)
         {
-
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveFileDialog.FileName = "program.txt";
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            saveFileDialog.FilterIndex = 2;
+            saveFileDialog.RestoreDirectory = true;
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                using (StreamWriter sw = new StreamWriter(saveFileDialog.FileName))
+                {
+                    sw.Write(TBInterpret.Text);
+                }
+            }
+            isSaved = true;
         }
-
-
+        
         private void Rerender()
         {
             foreach (Rectangle rect in GridRect.Children)
@@ -308,5 +405,28 @@ namespace kaDel
             }
         }
 
+        // start dispatcher timer on shortcut Ctrl + Enter on window listener
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                actionsQueue = new List<string>(TBInterpret.Text.Split('\n').Select(x => x.Trim().ToLower()).Where(x => x != "").ToArray());
+                playfieldArray = new int[10, 10];
+                robotPosition = new IntPoint(9, 0);
+                direction = DirectionsEnum.Right;
+                Rerender();
+                dispatcherTimer.Start();
+            }
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(SliderSpeed.Value);
+        }
+
+        private void TBInterpret_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            isSaved = false;
+        }
     }
 }

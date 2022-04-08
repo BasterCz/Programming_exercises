@@ -5,20 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:kaDel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="545" Width="680">
-    <Grid x:Name="GridParent">
-        <Grid Margin="240,10,10,54" RenderTransformOrigin="0.484,0.501" x:Name="GridRect" Width="400" Height="400">
+        Title="MainWindow" Height="591" Width="718" KeyDown="Window_KeyDown">
+    <Grid x:Name="GridParent" Margin="0,0,0,-87">
+        <Grid Margin="255,10,25,181" RenderTransformOrigin="0.484,0.501" x:Name="GridRect" Width="400" Height="400">
 
         </Grid>
-        <Button x:Name="BtnKrok" Content="Krok" HorizontalAlignment="Left" Margin="270,461,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnKrok_Click"/>
-        <Button x:Name="BtnOtoc" Content="Otoč" HorizontalAlignment="Left" Margin="345,461,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnOtoc_Click"/>
-        <Button x:Name="BtnVypln" Content="Vyplň" HorizontalAlignment="Left" Margin="420,461,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnVypln_Click"/>
-        <Button x:Name="BtnVymaz" Content="Vymaž" HorizontalAlignment="Left" Margin="495,461,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnVymaz_Click"/>
-        <Button x:Name="BtnReset" Content="Reset" HorizontalAlignment="Left" Margin="570,461,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnReset_Click"/>
+        <Button x:Name="BtnKrok" Content="Krok" HorizontalAlignment="Left" Margin="285,482,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnKrok_Click"/>
+        <Button x:Name="BtnOtoc" Content="Otoč" HorizontalAlignment="Left" Margin="360,482,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnOtoc_Click"/>
+        <Button x:Name="BtnVypln" Content="Vyplň" HorizontalAlignment="Left" Margin="435,482,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnVypln_Click"/>
+        <Button x:Name="BtnVymaz" Content="Vymaž" HorizontalAlignment="Left" Margin="510,482,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnVymaz_Click"/>
+        <Button x:Name="BtnReset" Content="Reset" HorizontalAlignment="Left" Margin="585,482,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnReset_Click"/>
         <TextBox x:Name="TBInterpret" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Height="219" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="207"/>
-        <TextBox x:Name="TBOutput"  VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Left" Height="209" Margin="10,235,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="207"/>
-        <Button x:Name="BtnSpustit" Content="Spustit" HorizontalAlignment="Left" Margin="10,461,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnSpustit_Click"/>
-        <Button x:Name="BtnUlozit" Content="Uložit" HorizontalAlignment="Left" Margin="160,461,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnUlozit_Click"/>
-        <Button x:Name="BtnNahrat" Content="Nahrát" HorizontalAlignment="Left" Margin="85,461,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnNahrat_Click"/>
+        <TextBox x:Name="TBOutput"  VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Left" Height="209" Margin="10,235,0,0" TextWrapping="Wrap" Text="*** Vystupni okno ***" VerticalAlignment="Top" Width="207"/>
+        <Button x:Name="BtnSpustit" Content="Spustit" HorizontalAlignment="Left" Margin="25,482,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnSpustit_Click"/>
+        <Button x:Name="BtnUlozit" Content="Uložit" HorizontalAlignment="Left" Margin="175,482,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnUlozit_Click"/>
+        <Button x:Name="BtnNahrat" Content="Nahrát" HorizontalAlignment="Left" Margin="100,482,0,0" VerticalAlignment="Top" Width="70" Height="30" Click="BtnNahrat_Click"/>
+        <Slider x:Name="SliderSpeed" HorizontalAlignment="Left" IsDirectionReversed="True" Height="19" Margin="285,452,0,0" VerticalAlignment="Top" Width="370" Value="500"  Minimum="100" Maximum="2000" ValueChanged="Slider_ValueChanged"/>
+        <Label Content="Speed" HorizontalAlignment="Left" Margin="237,449,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
