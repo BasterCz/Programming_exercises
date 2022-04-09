@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "B0QwEyedptQHH1MiVHors3ahcV5jyIjBSE98LrHOJCnuQXsIc5dHc3PSk8RFK9MXbxQCD78uPMlyV6/TsbdocA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Borek\\source\\repos\\MazeAPI\\MazeAPI\\MazeAPI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Borek\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\Borek\\.nuget\\packages\\restsharp\\106.15.0\\restsharp.106.15.0.nupkg.sha512"
+  ],
+  "logs": []
+}

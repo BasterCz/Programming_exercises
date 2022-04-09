@@ -1,0 +1,24 @@
+﻿<Window x:Class="MazeAPI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MazeAPI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="500" Width="800" KeyDown="Window_KeyDown">
+    <Grid>
+        <Grid x:Name="GridMap" HorizontalAlignment="Left" Height="400" Margin="390,0,0,0" VerticalAlignment="Center" Width="400"/>
+        <RichTextBox x:Name="RTBResponse" HorizontalAlignment="Left" Height="196" Margin="10,228,0,0" VerticalAlignment="Top" Width="363" TextChanged="RTBResponse_TextChanged"/>
+        <Button x:Name="BtnNorth" Content="North" HorizontalAlignment="Left" Height="42" Margin="146,23,0,0" VerticalAlignment="Top" Width="92" Click="BtnNorth_Click"/>
+        <Button x:Name="BtnSouth" Content="South" HorizontalAlignment="Left" Height="42" Margin="146,131,0,0" VerticalAlignment="Top" Width="92" Click="BtnSouth_Click"/>
+        <Button x:Name="BtnWest" Content="West" HorizontalAlignment="Left" Height="42" Margin="42,77,0,0" VerticalAlignment="Top" Width="92" Click="BtnWest_Click"/>
+        <Button x:Name="BtnEast" Content="East" HorizontalAlignment="Left" Height="42" Margin="250,77,0,0" VerticalAlignment="Top" Width="92" Click="BtnEast_Click"/>
+        <Button x:Name="BtnKey" Content="Grab key" HorizontalAlignment="Left" Height="42" Margin="42,131,0,0" VerticalAlignment="Top" Width="92" Click="BtnKey_Click"/>
+        <Button x:Name="BtnExit" Content="Exit" HorizontalAlignment="Left" Height="42" Margin="250,131,0,0" VerticalAlignment="Top" Width="92" Click="BtnExit_Click"/>
+        <Button x:Name="BtnReset" Content="Reset" HorizontalAlignment="Left" Height="42" Margin="250,23,0,0" VerticalAlignment="Top" Width="92" Click="BtnReset_Click"/>
+        <Border x:Name="BorderKey" BorderBrush="Black" BorderThickness="2" Width="42" Height="42"  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="92,23,0,0"/>
+        <Border x:Name="BorderColor" BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Left" Height="42" Margin="146,77,0,0" VerticalAlignment="Top" Width="92"/>
+        <Label Content="Key" HorizontalAlignment="Left" Margin="53,31,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>
